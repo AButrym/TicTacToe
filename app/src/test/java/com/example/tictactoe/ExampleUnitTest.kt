@@ -11,7 +11,28 @@ import org.junit.Assert.*
  */
 class ExampleUnitTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun `isWin is false for empty board`() {
+        val model = Model.empty
+        assertEquals(GameState.IN_PROCESS, model.gameState)
+    }
+
+    @Test
+    fun `update empty board should add cross`() {
+        val model = Model.empty
+        val expected = Model.of("X__|___|___")
+
+        val actual = model.update(0, 0)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `update board with a single cross should add nought`() {
+        val model = Model.of("X__|___|___")
+        val expected = Model.of("X__|_O_|___")
+
+        val actual = model.update(1, 1)
+
+        assertEquals(expected, actual)
     }
 }

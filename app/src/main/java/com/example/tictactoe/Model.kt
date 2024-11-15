@@ -3,7 +3,22 @@ package com.example.tictactoe
 const val DIM = 3
 
 data class Model(val cells: List<CellState>) {
-    companion object
+    companion object {
+        val empty = Model.of("___|___|___")
+    }
+}
+
+val Model.gameState get(): GameState = TODO()
+
+fun Model.update(row: Int, col: Int): Model {
+    TODO()
+}
+
+enum class GameState {
+    CROSS_WIN,
+    NOUGHT_WIN,
+    DRAW,
+    IN_PROCESS
 }
 
 enum class CellState {
@@ -35,9 +50,21 @@ fun Model.print() {
 val Model.Companion.random get() =
     Model(List(DIM * DIM) { CellState.entries.random() })
 
+fun Model.Companion.of(str: String): Model {
+    val list = mutableListOf<CellState>()
+    for (ch in str) {
+        when (ch) {
+            'X' -> list.add(CellState.CROSS)
+            'O', '0' -> list.add(CellState.NOUGHT)
+            '_', ' ' -> list.add(CellState.EMPTY)
+        }
+    }
+    return Model(list)
+}
+
 fun main() {
-    val model = Model(List(DIM * DIM) { CellState.EMPTY })
-    val model1 = Model.random
+    val model = Model.of("___|___|___")
+    val model1 = Model.of("X__|OX_|_OX")
     model.print()
     model1.print()
 }
