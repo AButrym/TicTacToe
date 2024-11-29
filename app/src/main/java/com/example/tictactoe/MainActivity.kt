@@ -25,6 +25,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,7 +46,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Main() {
     TicTacToeTheme {
-        var model by remember { mutableStateOf(Model.random) }
+        var model by remember { mutableStateOf(Model.empty) }
         val isEnd by remember { derivedStateOf { model.gameState != GameState.IN_PROCESS } }
 
         fun onClick(row: Int, col: Int) {
@@ -57,12 +59,15 @@ fun Main() {
 }
 
 @Composable
-fun Grid(model: Model, isEnd: Boolean, onClick: (Int, Int) -> Unit = { _, _ -> }) {
+fun Grid(model: Model, isEnd: Boolean = false, onClick: (Int, Int) -> Unit = { _, _ -> }) {
     Column(modifier = Modifier
         .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if (isEnd) {
+            WinBanner(model)
+        }
         repeat(DIM) { row ->
             Row {
                 repeat(DIM) { col ->
@@ -71,28 +76,25 @@ fun Grid(model: Model, isEnd: Boolean, onClick: (Int, Int) -> Unit = { _, _ -> }
             }
         }
     }
-    if (isEnd) {
-        WinBanner(model)
-    }
 }
 
 @Composable
 fun WinBanner(model: Model) {
     val gameState = model.gameState
+    val style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold)
     when (gameState) {
         GameState.CROSS_WIN -> {
-            Text("Cross wins!")
+            Text("Cross wins!", style = style)
         }
         GameState.NOUGHT_WIN -> {
-            Text("Nought wins!")
+            Text("Nought wins!", style = style)
         }
         GameState.DRAW -> {
-            Text("Draw!")
+            Text("Draw!", style = style)
         }
         else -> error("Should not get here!")
     }
 }
-
 
 @Preview(showSystemUi = true)
 @Composable
@@ -107,8 +109,8 @@ fun Cell(cell: CellState,
     TextButton(onClick = onClick,
         modifier = Modifier
             .size(120.dp)
-            .background(Color.LightGray)
-            .padding(2.dp),
+            .padding(2.dp)
+            .background(Color.LightGray),
         contentPadding = PaddingValues(0.dp)
         ) {
         Text(
