@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -54,12 +55,19 @@ fun Main() {
             Log.i("CellClick", "cell ($row, $col) is clicked")
         }
 
-        Grid(model, isEnd, ::onClick)
+        fun onReset() {
+            model = Model.empty
+        }
+
+        Grid(model, isEnd, ::onClick, ::onReset)
     }
 }
 
 @Composable
-fun Grid(model: Model, isEnd: Boolean = false, onClick: (Int, Int) -> Unit = { _, _ -> }) {
+fun Grid(model: Model, isEnd: Boolean = false,
+         onClick: (Int, Int) -> Unit = { _, _ -> },
+         onReset: () -> Unit = { }
+) {
     Column(modifier = Modifier
         .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -74,6 +82,9 @@ fun Grid(model: Model, isEnd: Boolean = false, onClick: (Int, Int) -> Unit = { _
                     Cell(model[row, col]) { onClick(row, col) }
                 }
             }
+        }
+        Button(onClick = onReset) {
+            Text("RESET")
         }
     }
 }
